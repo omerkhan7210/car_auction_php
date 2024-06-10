@@ -15140,9 +15140,6 @@ header.style-6 .main-menu .hotline-area .content h6 a {
 }
 
 .product-card .product-img .number-of-img {
-  position: absolute;
-  left: 20px;
-  top: 17px;
   font-family: var(--font-open-sans);
   font-weight: 400;
   font-size: 14px;
@@ -15152,8 +15149,7 @@ header.style-6 .main-menu .hotline-area .content h6 a {
   align-items: center;
   gap: 5px;
   line-height: 1;
-  transition: 0.35s;
-  opacity: 0;
+  height: 130px;
 }
 
 .product-card .product-img .fav {
@@ -15231,6 +15227,9 @@ header.style-6 .main-menu .hotline-area .content h6 a {
 
 .product-card .product-img img {
   border-radius: 5px;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
 }
 
 @media (max-width: 767px) {

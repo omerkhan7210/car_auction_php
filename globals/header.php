@@ -32,21 +32,7 @@
               SELL WITH US
             </button>
           </li>
-          <li>
-            <a href="#">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 14 14"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M7.00012 2.40453L6.37273 1.75966C4.90006 0.245917 2.19972 0.76829 1.22495 2.67141C0.767306 3.56653 0.664053 4.8589 1.4997 6.50827C2.30473 8.09639 3.97953 9.99864 7.00012 12.0706C10.0207 9.99864 11.6946 8.09639 12.5005 6.50827C13.3362 4.85803 13.2338 3.56653 12.7753 2.67141C11.8005 0.76829 9.10019 0.245042 7.62752 1.75879L7.00012 2.40453ZM7.00012 13.125C-6.41666 4.25953 2.86912 -2.65995 6.84612 1.00016C6.89862 1.04829 6.95024 1.09816 7.00012 1.14979C7.04949 1.09821 7.10087 1.04859 7.15413 1.00104C11.1302 -2.6617 20.4169 4.25865 7.00012 13.125Z"
-                />
-              </svg>
-              SAVE
-            </a>
-          </li>
+         
           <li>
             <button
               type="button"
@@ -157,111 +143,11 @@
                     </li>
                   </ul>
                 </li>
-                <li class="menu-single-item">
-                  <h6>Popular Models</h6>
-                  <ul>
-                    <li>
-                      <a href="single-brand-category.php">Toyota Camry</a>
-                    </li>
-                    <li>
-                      <a href="single-brand-category.php">Ford Mustang</a>
-                    </li>
-                    <li>
-                      <a href="single-brand-category.php">Volkswagen Golf</a>
-                    </li>
-                    <li>
-                      <a href="single-brand-category.php">Mercedes C-Class</a>
-                    </li>
-                    <li><a href="single-brand-category.php">Audi A4</a></li>
-                    <li>
-                      <a href="single-brand-category.php">Jeep Wrangler</a>
-                    </li>
-                    <li><a href="single-brand-category.php">Mazda CX-5</a></li>
-                    <li>
-                      <a href="single-brand-category.php"
-                        >Chevrolet Corvette</a
-                      >
-                    </li>
-                    <li class="explore-more-btn">
-                      <a href="brand-category.php"
-                        >Explore More <i class="bi bi-arrow-right"></i
-                      ></a>
-                    </li>
-                  </ul>
-                </li>
-                <li class="menu-single-item">
-                  <h6>Popular Cities</h6>
-                  <ul>
-                    <li>
-                      <a href="single-brand-category.php"
-                        >Panama City (10)<img
-                          src="assets/img/menu-icon/panama.svg"
-                          alt
-                      /></a>
-                    </li>
-                    <li>
-                      <a href="single-brand-category.php"
-                        >Sydne City (10)<img
-                          src="assets/img/menu-icon/sydne.svg"
-                          alt
-                      /></a>
-                    </li>
-                    <li>
-                      <a href="single-brand-category.php"
-                        >Melbourne City (10)<img
-                          src="assets/img/menu-icon/melbourne.svg"
-                          alt
-                      /></a>
-                    </li>
-                    <li>
-                      <a href="single-brand-category.php"
-                        >New Delhi (10)<img
-                          src="assets/img/menu-icon/delhi.svg"
-                          alt
-                      /></a>
-                    </li>
-                    <li>
-                      <a href="single-brand-category.php"
-                        >New York (10)<img
-                          src="assets/img/menu-icon/newYork.svg"
-                          alt
-                      /></a>
-                    </li>
-                    <li>
-                      <a href="single-brand-category.php"
-                        >Menchester City (10)<img
-                          src="assets/img/menu-icon/menchester.svg"
-                          alt
-                      /></a>
-                    </li>
-                    <li>
-                      <a href="single-brand-category.php"
-                        >City of Greece (10)<img
-                          src="assets/img/menu-icon/greece.svg"
-                          alt
-                      /></a>
-                    </li>
-                    <li>
-                      <a href="single-brand-category.php"
-                        >City of Abu-dabi (10)<img
-                          src="assets/img/menu-icon/abudabi.svg"
-                          alt
-                      /></a>
-                    </li>
-                    <li class="explore-more-btn">
-                      <a href="brand-category.php"
-                        >Explore More <i class="bi bi-arrow-right"></i
-                      ></a>
-                    </li>
-                  </ul>
-                </li>
               </ul>
             </div>
           </li>
         
           <li><a href="about.php">About Us</a></li>
-          <li><a href="brand-category.php">Brand Category</a></li>
-          <li><a href="car-deatils.php">Car Details </a></li>
           <li>
                 <a href="car-auction-details.php">Car Auction Details</a>
               </li>
@@ -345,122 +231,7 @@
         </div>
       </div>
       <div class="nav-right d-flex jsutify-content-end align-items-center">
-        <div class="dropdown">
-          <button class="modal-btn header-cart-btn" type="button">
-            <i class="bi bi-bag-check"></i> CART (2 )
-          </button>
-          <div class="cart-menu">
-            <div class="cart-body">
-              <ul>
-                <li class="single-item">
-                  <div class="item-area">
-                    <div class="main-item">
-                      <div class="item-img">
-                        <img src="assets/img/home1/cart-01.png" alt />
-                      </div>
-                      <div class="content-and-quantity">
-                        <div class="content">
-                          <div
-                            class="price-and-btn d-flex align-items-center justify-content-between"
-                          >
-                            <span>$234</span>
-                            <button class="close-btn">
-                              <i class="bi bi-x"></i>
-                            </button>
-                          </div>
-                          <h6>
-                            <a href="product-details.php"
-                              >Steering Rack Advance Auto Parts is a
-                              retailer.</a
-                            >
-                          </h6>
-                        </div>
-                        <div class="quantity-area">
-                          <div class="quantity">
-                            <a class="quantity__minus"
-                              ><span><i class="bi bi-dash"></i></span
-                            ></a>
-                            <input
-                              name="quantity"
-                              type="text"
-                              class="quantity__input"
-                              value="01"
-                            />
-                            <a class="quantity__plus"
-                              ><span><i class="bi bi-plus"></i></span
-                            ></a>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </li>
-                <li class="single-item">
-                  <div class="item-area">
-                    <div class="main-item">
-                      <div class="item-img">
-                        <img src="assets/img/home1/cart-01.png" alt />
-                      </div>
-                      <div class="content-and-quantity">
-                        <div class="content">
-                          <div
-                            class="price-and-btn d-flex align-items-center justify-content-between"
-                          >
-                            <span>$234</span>
-                            <button class="close-btn">
-                              <i class="bi bi-x"></i>
-                            </button>
-                          </div>
-                          <h6>
-                            <a href="product-details.php"
-                              >Steering Rack Advance Auto Parts is a
-                              retailer.</a
-                            >
-                          </h6>
-                        </div>
-                        <div class="quantity-area">
-                          <div class="quantity">
-                            <a class="quantity__minus"
-                              ><span><i class="bi bi-dash"></i></span
-                            ></a>
-                            <input
-                              name="quantity"
-                              type="text"
-                              class="quantity__input"
-                              value="01"
-                            />
-                            <a class="quantity__plus"
-                              ><span><i class="bi bi-plus"></i></span
-                            ></a>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div class="cart-footer">
-              <div class="pricing-area">
-                <ul>
-                  <li><span>Sub Total</span><span>$468</span></li>
-                  <li><span>Offer (20%)</span><span>$56</span></li>
-                </ul>
-                <ul class="total">
-                  <li><span>Total</span><span>$425</span></li>
-                </ul>
-              </div>
-              <div class="footer-button">
-                <ul>
-                  <li>
-                    <a class="primary-btn2" href="#">Continue Shopping</a>
-                  </li>
-                  <li><a class="primary-btn2" href="#">Product Checkout</a></li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
+      
         <div class="hotline-area d-xl-flex d-none">
           <div class="icon">
             <img src="assets/img/home1/icon/hotline-icon.svg" alt />

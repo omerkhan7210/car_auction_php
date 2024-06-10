@@ -10,41 +10,38 @@ if(!isset($admin_id)){
    header('location:login.php.php');
 }
 
-if(isset($_POST['update'])){
+if(isset($_POST['edit_product'])){
 
-   $pid = $_POST['pid'];
-   $name = $_POST['name'];
-   $name = filter_var($name, FILTER_SANITIZE_STRING);
-   $price = $_POST['price'];
-   $price = filter_var($price, FILTER_SANITIZE_STRING);
-   $details = $_POST['details'];
-   $details = filter_var($details, FILTER_SANITIZE_STRING);
+   $car_id = $_POST['car_id'];
+   $make = $_POST['make'];
+   $make = filter_var($make, FILTER_SANITIZE_STRING);
+   $model = $_POST['model'];
+   $model = filter_var($model, FILTER_SANITIZE_STRING);
+   $doors = $_POST['doors'];
+   $doors = filter_var($doors, FILTER_VALIDATE_INT);
+   $colors = $_POST['colors'];
+   $colors = filter_var($colors, FILTER_SANITIZE_STRING);
+   $mileage = $_POST['mileage'];
+   $mileage = filter_var($mileage, FILTER_SANITIZE_STRING);
+   $engine_cc = $_POST['engine_cc'];
+   $engine_cc = filter_var($engine_cc, FILTER_VALIDATE_INT);
+   $fuel_type = $_POST['fuel_type'];
+   $fuel_type = filter_var($fuel_type, FILTER_SANITIZE_STRING);
+   $steering = $_POST['steering'];
+   $steering = filter_var($steering, FILTER_SANITIZE_STRING);
+   $seating_capacity = $_POST['seating_capacity'];
+   $seating_capacity = filter_var($seating_capacity, FILTER_VALIDATE_INT);
+   $num_of_cylinders = $_POST['num_of_cylinders'];
+   $num_of_cylinders = filter_var($num_of_cylinders, FILTER_VALIDATE_INT);
+   $transmission = $_POST['transmission'];
+   $transmission = filter_var($transmission, FILTER_SANITIZE_STRING);
+   $wheels = $_POST['wheels'];
+   $wheels = filter_var($wheels, FILTER_VALIDATE_INT);
 
-   $update_product = $conn->prepare("UPDATE `products` SET name = ?, price = ?, details = ? WHERE id = ?");
-   $update_product->execute([$name, $price, $details, $pid]);
+   $update_car = $conn->prepare("UPDATE `CarDetails` SET make = ?, model = ?, doors = ?, colors = ?, mileage = ?, engine_cc = ?, fuel_type = ?,   steering = ?, seating_capacity = ?, num_of_cylinders = ?, transmission = ?, wheels = ? WHERE id = ?");
+   $update_car->execute([$make, $model, $doors, $colors, $mileage, $engine_cc, $fuel_type, $steering, $seating_capacity, $num_of_cylinders, $transmission, $wheels, $car_id]);
 
-   $message[] = 'product updated successfully!';
-
-   $old_image = $_POST['old_image'];
-   $image = $_FILES['image']['name'];
-   $image = filter_var($image, FILTER_SANITIZE_STRING);
-   $image_size_01 = $_FILES['image']['size'];
-   $image_tmp_name_01 = $_FILES['image']['tmp_name'];
-   $image_folder_01 = './uploads/'.$image;
-
-   if(!empty($image)){
-      if($image_size_01 > 2000000){
-         $message[] = 'image size is too large!';
-      }else{
-         $update_image = $conn->prepare("UPDATE `products` SET image = ? WHERE id = ?");
-         $update_image->execute([$image, $pid]);
-         move_uploaded_file($image_tmp_name_01, $image_folder_01);
-         unlink('./uploads/'.$old_image);
-         $message[] = 'image 01 updated successfully!';
-      }
-   }
-
-
+   $message[] = 'Car details updated successfully!';
 
 }
 
@@ -81,7 +78,7 @@ if(isset($_POST['update'])){
       cursor: pointer;
       position: relative;
       z-index: 5;
-height: 25rem;
+    height: 25rem;
     }
 
     .image_container img {
@@ -195,40 +192,199 @@ height: 25rem;
 
    <?php
       $update_id = $_GET['update'];
-      $select_products = $conn->prepare("SELECT * FROM `products` WHERE id = ?");
-      $select_products->execute([$update_id]);
-      if($select_products->rowCount() > 0){
-         while($fetch_products = $select_products->fetch(PDO::FETCH_ASSOC)){ 
+      $select_cars = $conn->prepare("SELECT * FROM `CarDetails` WHERE id = ?");
+      $select_cars->execute([$update_id]);
+      if($select_cars->rowCount() > 0){
+         while($fetch_car = $select_cars->fetch(PDO::FETCH_ASSOC)){ 
    ?>
 
-   
-   <form action="" method="post" enctype="multipart/form-data">
-      <input type="hidden" name="pid" value="<?= $fetch_products['id']; ?>">
-      <input type="hidden" name="old_image" value="<?= $fetch_products['image']; ?>">
-      <div class="image-container">
-         <div class="main-image">
-            <img src="./uploads/<?= $fetch_products['image']; ?>" alt="">
-         </div>
+
+
+<form class="space-y-6 mx-[300px]" action="#" method="POST" enctype="multipart/form-data">
+    <input type="hidden" name="car_id" value="<?= $fetch_car['id']; ?>">
+
+    <div class="flex justify-between gap-5">
+        
+        <div class="w-full">
+            <label for="owner" class="block text-3xl font-medium leading-6 text-gray-900 capitalize">owner</label>
+            <input id="owner" name="owner" type="text" required class="p-3 block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-3xl sm:leading-6" value="<?= $fetch_car['owner']; ?>">
+        </div>
+
+        
+        <div class="w-full">
+            <label for="engine_cc" class="block text-3xl font-medium leading-6 text-gray-900 capitalize">engine_cc</label>
+            <input id="engine_cc" name="engine_cc" type="text" required class="p-3 block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-3xl sm:leading-6" value="<?= $fetch_car['engine_cc']; ?>">
+        </div>
+
        
-      </div>
-      <span>update name</span>
-      <input type="text" name="name" required class="box" maxlength="100" placeholder="enter product name" value="<?= $fetch_products['name']; ?>">
-      <span>update price</span>
-      <input type="number" name="price" required class="box" min="0" max="9999999999" placeholder="enter product price" onkeypress="if(this.value.length == 10) return false;" value="<?= $fetch_products['price']; ?>">
-      <span>update details</span>
-      <textarea name="details" class="box" required cols="30" rows="10"><?= $fetch_products['details']; ?></textarea>
-      <span>update image 01</span>
-      <input type="file" name="image" accept="image/jpg, image/jpeg, image/png, image/webp" class="box">
-      <div class="flex-btn">
-         <input type="submit" name="update" class="btn" value="update">
-         <a href="products.php" class="option-btn">go back</a>
-      </div>
-   </form>
+
+    </div>
+
+    <div class="flex justify-between gap-5">
+        <div class="w-full">
+            <label for="make" class="block text-3xl font-medium leading-6 text-gray-900 capitalize">Make</label>
+            <input id="make" name="make" type="text" required class="p-3 block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-3xl sm:leading-6" value="<?= $fetch_car['make']; ?>">
+        </div>
+
+        <div class="w-full">
+            <label for="model" class="block text-3xl font-medium leading-6 text-gray-900 capitalize">Model</label>
+            <input id="model" name="model" type="text" required class="p-3 block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-3xl sm:leading-6" value="<?= $fetch_car['model']; ?>">
+        </div>
+    </div>
+
+    <div class="flex justify-between gap-5">
+       
+    <div class="w-full">
+            <label for="steering" class="block text-3xl font-medium leading-6 text-gray-900 capitalize">Steering</label>
+            <input id="steering" name="steering" type="text" required class="p-3 block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-3xl sm:leading-6" value="<?= $fetch_car['steering']; ?>">
+        </div>
+
+        <div class="w-full">
+            <label for="mileage" class="block text-3xl font-medium leading-6 text-gray-900 capitalize">Mileage</label>
+            <input id="mileage" name="mileage" type="text" required class="p-3 block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-3xl sm:leading-6" value="<?= $fetch_car['mileage']; ?>">
+        </div>
+    </div>
+
+    <div class="flex justify-between gap-5">
+        <div class="w-full">
+            <label for="doors" class="block text-3xl font-medium leading-6 text-gray-900 capitalize">Door's</label>
+            <input id="doors" name="doors" type="text" required class="p-3 block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-3xl sm:leading-6" value="<?= $fetch_car['doors']; ?>">
+        </div>
+
+        <div class="w-full">
+            <label for="colors" class="block text-3xl font-medium leading-6 text-gray-900 capitalize">Colors</label>
+            <input id="colors" name="colors" type="text" required class="p-3 block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-3xl sm:leading-6" value="<?= $fetch_car['colors']; ?>">
+        </div>
+    </div>
+
+    <div class="flex justify-between gap-5">
+        <div class="w-full">
+            <label for="seating_capacity" class="block text-3xl font-medium leading-6 text-gray-900 capitalize">Seating Capacity</label>
+            <input id="seating_capacity" name="seating_capacity" type="text" required class="p-3 block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-3xl sm:leading-6" value="<?= $fetch_car['seating_capacity']; ?>">
+        </div>
+
+        <div class="w-full">
+            <label for="fuel_type" class="block text-3xl font-medium leading-6 text-gray-900 capitalize">Fuel Type</label>
+            <input id="fuel_type" name="fuel_type" type="text" required class="p-3 block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-3xl sm:leading-6" value="<?= $fetch_car['fuel_type']; ?>">
+        </div>
+    </div>
+
+    <div class="flex justify-between gap-5">
+        <div class="w-full">
+            <label for="num_of_cylinders" class="block text-3xl font-medium leading-6 text-gray-900 capitalize">No. of Cylinders</label>
+            <input id="num_of_cylinders" name="num_of_cylinders" type="text" required class="p-3 block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-3xl sm:leading-6" value="<?= $fetch_car['num_of_cylinders']; ?>">
+        </div>
+
+        <div class="w-full">
+            <label for="transmission" class="block text-3xl font-medium leading-6 text-gray-900 capitalize">Transmission</label>
+            <input id="transmission" name="transmission" type="text" required class="p-3 block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-3xl sm:leading-6" value="<?= $fetch_car['transmission']; ?>">
+        </div>
+    </div>
+
+    <div class="flex justify-between gap-5">
+        <div class="w-full">
+            <label for="wheels" class="block text-3xl font-medium leading-6 text-gray-900 capitalize">Wheels</label>
+            <input id="wheels" name="wheels" type="text" required class="p-3 block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-3xl sm:leading-6" value="<?= $fetch_car['wheels']; ?>">
+        </div>
+
+        <div class="w-full">
+            <label for="starting_bid" class="block text-3xl font-medium leading-6 text-gray-900 capitalize">Starting Bids</label>
+            <input id="starting_bid" name="starting_bid" type="text" required class="p-3 block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-3xl sm:leading-6" value="<?= $fetch_car['starting_bid']; ?>">
+        </div>
+    </div>
+
+    <div>
+    <label for="exterior_images" class="block text-3xl font-medium leading-6 text-gray-900 capitalize">Exterior Images</label>
+    <input id="exterior_images" name="exterior_images[]" type="file" multiple class="p-3 block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-3xl sm:leading-6">
+    <!-- Display existing exterior images -->
+    <?php 
+    $exterior_images = explode(',', $fetch_car['exterior_images']);?>
+    <div class="flex gap-5 p-5">
+    <?php
+    foreach ($exterior_images as $image) { 
+      $image_path = './uploads/' . trim($image);
+      if (file_exists($image_path)) {
+          echo '<img src="' .$image_path . '" alt="Exterior Image" class="h-32 w-64 object-cover">';
+      } else {
+          // Display a placeholder image
+          echo '<img src="./uploads/placeholder_image.jpg" alt="Placeholder Image" class="h-32 w-64 object-cover">';
+      }
+    }
+    ?>
+    </div>
+</div>
+
+<div>
+    <label for="interior_images" class="block text-3xl font-medium leading-6 text-gray-900 capitalize">Interior Images</label>
+    <input id="interior_images" name="interior_images[]" type="file" multiple  class="p-3 block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-3xl sm:leading-6">
+    <!-- Display existing interior images -->
+    <?php 
+    $interior_images = explode(',', $fetch_car['interior_images']);?>
+    <div class="flex gap-5 p-5">
+    <?php
+    foreach ($interior_images as $image) {
+      $image_path = './uploads/' . trim($image);
+        if (file_exists($image_path)) {
+            echo '<img src="' .$image_path . '" alt="Exterior Image" class="h-32 w-64 object-cover">';
+        } else {
+            // Display a placeholder image
+            echo '<img src="./uploads/placeholder_image.jpg" alt="Placeholder Image" class="h-32 w-64 object-cover">';
+        }
+    }
+    ?>
+    </div>
+</div>
+
+<div>
+    <label for="video_clip" class="block text-3xl font-medium leading-6 text-gray-900 capitalize">Video Clip</label>
+    <input id="video_clip" name="video_clip" type="file"  class="p-3 block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-3xl sm:leading-6">
+    <!-- Display existing video clip -->
+    <?php 
+    $video_clip = $fetch_car['video_clip'];
+    echo '<video controls src="./uploads/' . trim($video_clip) . '"></video>';
+    ?>
+    
+</div>
+
+<div>
+    <label for="colors_images" class="block text-3xl font-medium leading-6 text-gray-900 capitalize">Colors (Images)</label>
+    <input id="colors_images" name="colors_images[]" type="file" multiple  class="p-3 block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-3xl sm:leading-6">
+    <!-- Display existing color images -->
+    <?php 
+    $colors_images = explode(',', $fetch_car['colors_images']);?>
+    <div class="flex gap-5 p-5">
+    <?php
+    foreach ($colors_images as $image) {
+      $image_path = './uploads/' . trim($image);
+        if (file_exists($image_path)) {
+            echo '<img src="' .$image_path . '" alt="Exterior Image" class="h-32 w-64 object-cover">';
+        } else {
+            // Display a placeholder image
+            echo '<img src="./uploads/placeholder_image.jpg" alt="Placeholder Image" class="h-32 w-64 object-cover">';
+        }
+    }
+    ?>
+    </div>
+</div>
+
+
+    <div>
+        <label for="date_time" class="block text-3xl font-medium leading-6 text-gray-900 capitalize">DATE TIME</label>
+        <input id="date_time" name="date_time" type="date" required class="p-3 block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-3xl sm:leading-6">
+    </div>
+
+    <div>
+        <button name="edit_product" type="submit" class="flex w-full justify-center rounded-md uppercase bg-indigo-600 px-3 py-7 text-3xl font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Edit Product</button>
+    </div>
+</form>
+
+
+
    
    <?php
          }
       }else{
-         echo '<p class="empty">no product found!</p>';
+         echo '<p class="empty">no car found!</p>';
       }
    ?>
 

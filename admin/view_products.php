@@ -14,11 +14,12 @@ if(!isset($admin_id)){
 if(isset($_GET['delete'])){
 
    $delete_id = $_GET['delete'];
-   $delete_product_image = $conn->prepare("SELECT * FROM `products` WHERE id = ?");
+   $delete_product_image = $conn->prepare("SELECT * FROM `CarDetails` WHERE id = ?");
    $delete_product_image->execute([$delete_id]);
    $fetch_delete_image = $delete_product_image->fetch(PDO::FETCH_ASSOC);
+   // Assuming you have an image column in your CarDetails table
    unlink('./uploads/'.$fetch_delete_image['image']);
-   $delete_product = $conn->prepare("DELETE FROM `products` WHERE id = ?");
+   $delete_product = $conn->prepare("DELETE FROM `CarDetails` WHERE id = ?");
    $delete_product->execute([$delete_id]);
    header('location:view_products.php');
 }
@@ -56,20 +57,20 @@ if(isset($_GET['delete'])){
       cursor: pointer;
       position: relative;
       z-index: 5;
-height: 25rem;
+  height: 11rem;
     }
 
     .image_container img {
       object-fit: cover;
     
       width: 100%;
-      height: 25rem;
+      height: 11rem;
     }
 
     .title {
       overflow: clip;
       width: 100%;
-      font-size: 3rem;
+      font-size: 2rem;
       font-weight: 600;
       color:black;
       text-transform: capitalize;
@@ -165,56 +166,63 @@ height: 25rem;
 
     <section class="show-products  col-span-10 flex items-center justify-center flex-col gap-10">
 
-    <h1 class="heading">products added</h1>
+    <h1 class="heading">Cars added</h1>
 
     <div class="grid grid-cols-4 px-10 gap-10">
 
     <?php
-      $select_products = $conn->prepare("SELECT * FROM `products`");
+      $select_products = $conn->prepare("SELECT * FROM `CarDetails`");
       $select_products->execute();
       if($select_products->rowCount() > 0){
           while($fetch_products = $select_products->fetch(PDO::FETCH_ASSOC)){ 
     ?>
+      <div class="card">
+       <?php
+$exterior_images = explode(',', $fetch_products['exterior_images']);
+?>
+<div class="image_container">
+       <img src="./uploads/<?= $exterior_images[0] ?>" alt="Exterior Image">
+   
+</div>
+        <div class="title">
+          <span><?= $fetch_products['make'] . ' ' . $fetch_products['model']; ?></span>
+        </div>
+        <!-- Assuming you have other details like Mileage, Engine, Fuel Type, etc. -->
+        <p id="desc" class="text-2xl text-black">
+    Mileage: <?= $fetch_products['mileage']; ?><br>
+    Engine: <?= $fetch_products['engine_cc']; ?><br>
+    Fuel Type: <?= $fetch_products['fuel_type']; ?><br>
+    Condition: <?= $fetch_products['carcondition']; ?><br>
+    Key Features: <?= $fetch_products['key_features']; ?><br>
+    Make: <?= $fetch_products['make']; ?><br>
+    Model: <?= $fetch_products['model']; ?><br>
+    Year/Month: <?= $fetch_products['caryear']; ?><br>
+    Doors: <?= $fetch_products['doors']; ?><br>
+    Colors: <?= $fetch_products['colors']; ?><br>
+    Repairs: <?= $fetch_products['repair_status']; ?><br>
+    Steering: <?= $fetch_products['steering']; ?><br>
+    Seating Capacity: <?= $fetch_products['seating_capacity']; ?><br>
+    Fuel Type: <?= $fetch_products['fuel_type_secondary']; ?><br>
+    Number of Cylinders: <?= $fetch_products['num_of_cylinders']; ?><br>
+    Transmission: <?= $fetch_products['transmission']; ?><br>
+    Wheels: <?= $fetch_products['wheels']; ?><br>
+</p>
 
-  
-    <div class="card">
-      <div class="image_container">
-      <img src="./uploads/<?= $fetch_products['image']; ?>" alt="">
-      </div>
-      <div class="title">
-        <span><?= $fetch_products['name']; ?></span>
-      </div>
-      <p id="desc" class="text-2xl text-black">
-      <?= $fetch_products['details']; ?>
-      </p>
-      <div id="third-row" class="flex items-center">
-      <div class="size">
-        <span>Size</span>
-        <ul class="list-size">
-          <li class="item-list"><button class="item-list-button">$<span><?= $fetch_products['price']; ?></span>/-</button></li>
-          <li class="item-list"><button class="item-list-button">38</button></li>
-          <li class="item-list"><button class="item-list-button">39</button></li>
-          <li class="item-list"><button class="item-list-button">40</button></li>
-          <li class="item-list"><button class="item-list-button">41</button></li>
-        </ul>
-      </div>
-    
-      </div>
-      <div class="flex-btn">
-          <a href="update_product.php?update=<?= $fetch_products['id']; ?>" class="option-btn">update</a>
-          <a href="view_products.php?delete=<?= $fetch_products['id']; ?>" class="delete-btn" onclick="return confirm('delete this product?');">delete</a>
-      </div>
-    </div>
 
+        <div class="flex-btn">
+            <a href="update_product.php?update=<?= $fetch_products['id']; ?>" class="option-btn">update</a>
+            <a href="view_products.php?delete=<?= $fetch_products['id']; ?>" class="delete-btn" onclick="return confirm('delete this product?');">delete</a>
+        </div>
+      </div>
+   
     <?php
           }
       }else{
-          echo '<p class="empty">no products added yet!</p>';
+          echo '<p class="empty">no cars added yet!</p>';
       }
     ?>
-
-    </div>
-
+ </div>
+   
     </section>
 </div>
 
