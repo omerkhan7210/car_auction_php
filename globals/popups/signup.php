@@ -3,11 +3,7 @@ try {
  
   if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-      $form_type = $_POST['form_type'];
-      echo $_POST['form_type'];
-      echo $_SESSION['user_name'];
-
-      if ($form_type == "signup") {
+      if (ISSET($_POST['signup'])) {
     // Validate and sanitize input
     $firstName = filter_var(trim($_POST["first_name"]), FILTER_SANITIZE_STRING);
     $lastName = filter_var(trim($_POST["last_name"]), FILTER_SANITIZE_STRING);
@@ -51,41 +47,6 @@ try {
       }
       
       
-      else if($form_type == "login"){
-          // Validate and sanitize input
-          $email = filter_var(trim($_POST["email"]), FILTER_SANITIZE_EMAIL);
-          $password = trim($_POST["password"]);
-  
-          // Check for empty fields
-          if (empty($email) || empty($password)) {
-              $_SESSION['login_error'] = "All fields are required.";
-          } else {
-              // Check if the email exists
-              $stmt = $conn->prepare("SELECT * FROM users WHERE email = :email");
-              $stmt->bindParam(':email', $email);
-              
-              $stmt->execute();
-              
-              if ($stmt->rowCount() > 0) {
-                  $user = $stmt->fetch(PDO::FETCH_ASSOC);
-                  // Verify the password
-                  if (password_verify($password, $user['password'])) {
-                    
-                      // Set session variables
-                      $_SESSION['user_id'] = $user['id'];
-                      $_SESSION['user_name'] = $user['name'];
-                      $_SESSION['success'] = "Login successful.";
-                      $_SESSION['login_error'] = "";
-                      header("Location: index.php");
-                      exit();
-                  } else {
-                      $_SESSION['login_error'] = "Invalid password.";
-                  }
-              } else {
-                  $_SESSION['login_error'] = "Email not found.";
-              }
-          }
-      }
      
   }
 } catch(PDOException $e) {
@@ -175,7 +136,7 @@ try {
                 </div>
                 <div class="col-md-12">
                   <div class="form-inner">
-                    <button class="primary-btn2" type="submit" onclick="return false">
+                    <button class="primary-btn2" type="submit" name="signup">
                       Sign Up Now
                     </button>
                   </div>

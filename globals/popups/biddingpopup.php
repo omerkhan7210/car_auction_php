@@ -1,72 +1,84 @@
 <?php
-   // Function to sanitize input
-   function sanitize_input($data) {
-       return htmlspecialchars(stripslashes(trim($data)));
-   }
-   $carName = sanitize_input($_GET['car_name']); // Assuming the car name is provided in the URL as a GET parameter
-           
-   if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-     
-       $form_type = sanitize_input($_POST['form_type']);
-   
-       if ($form_type == "bidding") {
-           // Retrieve form data
-           $email = sanitize_input($_POST['email']);
-           $bidAmount = sanitize_input($_POST['bidAmount']);
-          $bidDateTime = date('Y-m-d H:i:s'); // Get current date and time
-   
-           // Validate form data
-           if (empty($email) || empty($bidAmount) || empty($carName)) {
-               echo "All fields are required.";
-               exit;
-           }
-   
-           // Retrieve user ID from Users table
-           $stmt = $conn->prepare("SELECT user_id FROM Users WHERE email = ?");
-           $stmt->bind_param("s", $email);
-           $stmt->execute();
-           $stmt->bind_result($userId);
-           $stmt->fetch();
-           $stmt->close();
-   
-           if (empty($userId)) {
-               echo "User not found.";
-               exit;
-           }
-   
-           // Retrieve car ID from Cars table
-           $stmt = $conn->prepare("SELECT car_id,bid_amount FROM Cars WHERE car_name = ?");
-           $stmt->bind_param("s", $carName);
-           $stmt->execute();
-           $stmt->bind_result($carId, $minBidAmount);        
-           $stmt->fetch();
-           $stmt->close();
-   
-           if (empty($carId)) {
-               echo "Car not found.";
-               exit;
-           }
-   
-            // Check if the entered bid amount is greater than the current highest bid
-            if ($bidAmount <= $minBidAmount) {
-             echo "Your bid amount must be greater than the current highest bid of $currentHighestBid.";
-             exit;
-           }
-           // Prepare and bind SQL statement to insert bid
-           $stmt = $conn->prepare("INSERT INTO Bids (car_id, user_id, bid_amount, bid_datetime) VALUES (?, ?, ?, ?)");
-           $stmt->bind_param("iiis", $carId, $userId, $bidAmount, $bidDateTime);
-   
-           // Execute SQL statement
-           if ($stmt->execute() === TRUE) {
-               echo "Bid placed successfully!";
-           } else {
-               echo "Error: " . $stmt->error;
-           }
-           $stmt->close();
-       }
-   }
-   
-   ?>
+function sanitize_input($data) {
+    return htmlspecialchars(stripslashes(trim($data)));
+}
+
+
+$carName = isset($_GET['car_name']) ? sanitize_input($_GET['car_name']) : ""; // Assuming the car name is provided in the URL as a GET parameter
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  
+    if (isset($_POST['bidding'])) {
+      unset($_SESSION['message']);
+        // Retrieve form data
+        $email = sanitize_input($_POST['email']);
+        $bidAmount = sanitize_input($_POST['bidAmount']);
+        $bidDateTime = date('Y-m-d H:i:s'); // Get current date and time
+       
+       
+        // Validate form data
+        if (empty($email) || empty($bidAmount) || empty($carName)) {
+            $_SESSION["message"] = "All fields are required.";
+            
+        } else {
+            try {
+                // Database connection (assuming you have already created a PDO connection in $conn)
+                // Retrieve user ID from Users table
+                $stmt = $conn->prepare("SELECT id FROM Users WHERE email = ?");
+                $stmt->bindParam(1, $email);
+                $stmt->execute();
+                $user = $stmt->fetch(PDO::FETCH_ASSOC);
+                
+                if (empty($user['id'])) {
+                    $_SESSION["message"] = "User not found.";
+                } else {
+                    $userId = $user['id'];
+
+                    // Retrieve car ID from Cars table
+                    $stmt = $conn->prepare("SELECT id, starting_bid FROM cardetails WHERE make = ?");
+                    $stmt->bindParam(1, $carName);
+                    $stmt->execute();
+                    $car = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                    if (empty($car['id']) && empty($car['starting_bid'])) {
+                        $_SESSION["message"] = "Car not found.";
+                    } else {
+                        $carId = $car['id'];
+                        $minBidAmount = $car['starting_bid'];
+
+                        // Check if the entered bid amount is greater than the current highest bid
+                        if ($bidAmount <= $minBidAmount) {
+                            $_SESSION["message"] = "Your bid amount must be greater than the current highest bid of $minBidAmount.";
+                            
+                        } else {
+                            // Prepare and bind SQL statement to insert bid
+                            $stmt = $conn->prepare("INSERT INTO Bids (car_id, user_id, bid_amount, bid_datetime) VALUES (?, ?, ?, ?)");
+                            $stmt->bindParam(1, $carId);
+                            $stmt->bindParam(2, $userId);
+                            $stmt->bindParam(3, $bidAmount);
+                            $stmt->bindParam(4, $bidDateTime);
+
+                            // Execute SQL statement
+                            if ($stmt->execute() === TRUE) {
+                                $_SESSION["message"] = "Bid placed successfully!";
+                            } else {
+                                $_SESSION["message"] = "Error: " . $stmt->errorInfo()[2];
+                            }
+                            $stmt->closeCursor();
+                        }
+                    }
+                }
+            } catch (PDOException $e) {
+                $_SESSION["message"] = "Connection failed: " . $e->getMessage();
+                
+            }
+        }
+    }
+}
+?>
+
+
+
 <div
    class="modal adSearch-modal fade"
    id="bidsModal01"
@@ -112,7 +124,7 @@
                   </div>
                </div>
                <div class="apply-btn pt-30">
-                  <button class="primary-btn3" type="submit">
+                  <button class="primary-btn3" type="submit" name="bidding">
                      <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="16"
@@ -137,22 +149,3 @@
       </div>
    </div>
 </div>
-<script>
-   document.getElementById('biddingForm').addEventListener('submit', function(event) {
-      event.preventDefault();
-
-      const form = event.target;
-      const formData = new FormData(form);
-
-      fetch('./globals/popups/biddingpopup.php', {
-         method: 'POST',
-         body: formData,
-      })
-      .then(response => response.text())
-      .then(data => {
-         // Display the response from the server
-         document.getElementById('responseMessage').innerText = data;
-      })
-      .catch(error => console.error('Error:', error));
-   });
-</script>

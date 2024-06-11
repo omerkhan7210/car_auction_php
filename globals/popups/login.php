@@ -1,4 +1,44 @@
 
+<?php
+
+if(ISSET($_POST['login'])){
+  // Validate and sanitize input
+  $email = filter_var(trim($_POST["email"]), FILTER_SANITIZE_EMAIL);
+  $password = trim($_POST["password"]);
+
+  // Check for empty fields
+  if (empty($email) || empty($password)) {
+      $_SESSION['login_error'] = "All fields are required.";
+  } else {
+      // Check if the email exists
+      $stmt = $conn->prepare("SELECT * FROM users WHERE email = :email");
+      $stmt->bindParam(':email', $email);
+      
+      $stmt->execute();
+      
+      if ($stmt->rowCount() > 0) {
+          $user = $stmt->fetch(PDO::FETCH_ASSOC);
+          // Verify the password
+          if (password_verify($password, $user['password'])) {
+            
+              // Set session variables
+              $_SESSION['user_id'] = $user['id'];
+              $_SESSION['user_name'] = $user['name'];
+              $_SESSION['success'] = "Login successful.";
+              $_SESSION['login_error'] = "";
+              header("Location: index.php");
+              exit();
+          } else {
+              $_SESSION['login_error'] = "Invalid password.";
+          }
+      } else {
+          $_SESSION['login_error'] = "Email not found.";
+      }
+  }
+}
+
+?>
+
 
 <div
       class="modal signUp-modal fade"
@@ -68,7 +108,7 @@
                 </div>
                 <div class="col-md-12">
                   <div class="form-inner">
-                    <button class="primary-btn2" type="submit">Log In</button>
+                    <button class="primary-btn2" type="submit" name="login">Log In</button>
                   </div>
                 </div>
               </div>
